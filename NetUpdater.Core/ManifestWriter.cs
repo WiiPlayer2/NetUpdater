@@ -30,6 +30,8 @@ namespace NetUpdater.Core
             writer.Dispose();
         }
 
+        public Task FlushAsync() => writer.FlushAsync();
+
         public async Task WriteAsync(Manifest manifest)
         {
             await writer.WriteLineAsync(manifest.Version.ToString());

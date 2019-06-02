@@ -56,7 +56,7 @@ namespace NetUpdater.Core
 
         private Task<Result<(string, Uri), Exception>> ReadHash() => Helper.Try(async () =>
                 {
-                    var regex = new Regex(@"^(?<hash>[a-fA-F0-9]{512})\:(?<path>.*)$");
+                    var regex = new Regex(@"^(?<hash>[a-fA-F0-9]{128})\:(?<path>.*)$");
                     var line = await reader.ReadLineAsync();
                     var match = regex.Match(line);
 
