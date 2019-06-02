@@ -35,7 +35,7 @@ namespace NetUpdater.Core
         public Task<Manifest> CreateAsync(string channel, Version version)
         {
             var rootUri = new Uri(rootFolder.FullName + "/", UriKind.Absolute);
-            var hashes = rootFolder.EnumerateFiles()
+            var hashes = rootFolder.EnumerateFiles("*", SearchOption.AllDirectories)
                 .AsParallel()
                 .Select(file => (Info: file, RelativeUri: rootUri.MakeRelativeUri(new Uri(file.FullName, UriKind.Absolute))))
                 .Where(o => glob.IsMatch(o.RelativeUri.ToString()))
