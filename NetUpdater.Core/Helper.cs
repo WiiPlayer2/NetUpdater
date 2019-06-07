@@ -27,6 +27,17 @@ namespace NetUpdater.Core
                 return hashAlgorithm.ComputeHash(fStream).ToHex();
         }
 
+        public static Result<A, Error> Flatten<A, Error>(this Result<Option<A>, Error> result, Func<Error> onNone)
+        {
+            return result.Bind(
+                option => option.Match(
+                    value => Result.Success(value),
+                    () => (Result<A, Error>)Result.Fail(onNone())));
+        }
+
+        public static Task<Result<B, Error>> MapAsync<A, Error, B>(this Result<A, Error> result, Func<A, Task<B>> map)
+                    => result.BindAsync(async value => Result.Success<B, Error>(await map(value)));
+
         public static bool Matches(this string s, string pattern) => Regex.IsMatch(s, pattern);
 
         public static string ToHex(this byte[] buffer) => string.Join(string.Empty, buffer.Select(o => o.ToString("X2", CultureInfo.InvariantCulture)));
