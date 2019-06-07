@@ -46,26 +46,45 @@ namespace NetUpdater.Core
         public async Task<Result<Option<VersionData>, Exception>> GetNewerVersion(Uri updateUri)
         {
             var localManifest = await GetLocalManifest();
-            var versionDataResult = await GetRemoteVersionData(updateUri, GetChannel(localManifest));
-            return versionDataResult.Map(versionData => versionData.Version > localManifest.Version ? versionData : Option<VersionData>.None);
+            return await GetNewerVersion(localManifest, updateUri);
         }
+
+        public Task Install(Uri manifestUri) => Execute(OptionNone.Default, manifestUri);
 
         public async Task Update(Uri updateUri)
         {
             var localManifest = await GetLocalManifest();
-            var versionDataResult = (await GetNewerVersion(updateUri)).Flatten(() => new ArgumentException());
+            var versionDataResult = (await GetNewerVersion(localManifest, updateUri)).Flatten(() => new Exception("No new version found."));
             var remoteManifestResult = await versionDataResult
                 .BindAsync(async versionData => await GetRemoteManifest(new Uri(updateUri, versionData.ManifestPath)));
+
+            await versionDataResult.Match(
+                async versionData => await Execute(localManifest, new Uri(updateUri, versionData.ManifestPath)),
+                error => throw new Exception("Version data was not set.", error));
+        }
+
+        private async Task Execute(Option<Manifest> localManifestOption, Uri manifestUri)
+        {
+            var localManifest = await localManifestOption.Match(
+                o => Task.FromResult(o),
+                GetLocalManifest);
+            var remoteManifestResult = await GetRemoteManifest(manifestUri);
+
             await remoteManifestResult.Match(async remoteManifest =>
             {
-                var manifestUri = new Uri(updateUri, versionDataResult.GetValueOrThrow().ManifestPath);
                 var diff = localManifest.CreateDiff(remoteManifest);
 
                 var updateTasks = diff.Updates.Select(o => UpdateFile(manifestUri, o));
                 var deletionTasks = diff.Deletions.Select(o => Delete(o));
 
                 await Task.WhenAll(updateTasks.Concat(deletionTasks));
-            }, error => throw new Exception());
+            }, error => throw new Exception("Remote manifest was not set.", error));
+        }
+
+        private async Task<Result<Option<VersionData>, Exception>> GetNewerVersion(Manifest localManifest, Uri updateUri)
+        {
+            var versionDataResult = await GetRemoteVersionData(updateUri, GetChannel(localManifest));
+            return versionDataResult.Map(versionData => versionData.Version > localManifest.Version ? versionData : Option<VersionData>.None);
         }
 
         #endregion Public Methods
