@@ -14,10 +14,19 @@ namespace NetUpdater.Cli
 
         private static async Task Main(string[] args)
         {
-            await Parser.Default.ParseArguments<UpdateOptions>(args).MapResult(RunUpdate, RunError);
+            await Parser.Default.ParseArguments<PackOptions, UpdateOptions>(args)
+                .MapResult<PackOptions, UpdateOptions, Task>(RunPack, RunUpdate, RunError);
         }
 
         private static Task RunError(IEnumerable<Error> arg) => Task.CompletedTask;
+
+        private static async Task RunPack(PackOptions options)
+        {
+            Console.WriteLine($"Packing \"{options.ApplicationPath}\"...");
+            var packer = new Packer(options.ApplicationPath.LocalPath, options.ManifestName, options.Channel);
+            await packer.Pack(options.Version, options.OutputPath);
+            Console.WriteLine($"Packed to \"{options.OutputPath}\".");
+        }
 
         private static async Task RunUpdate(UpdateOptions options)
         {
