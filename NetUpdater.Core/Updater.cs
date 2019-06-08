@@ -51,7 +51,7 @@ namespace NetUpdater.Core
 
         public Task Install(Uri manifestUri) => Execute(OptionNone.Default, manifestUri);
 
-        public async Task Update(Uri updateUri)
+        public async Task<Option<Manifest>> Update(Uri updateUri)
         {
             var localManifest = await GetLocalManifest();
             var versionDataResult = (await GetNewerVersion(localManifest, updateUri)).Flatten(() => new Exception("No new version found."));
@@ -61,6 +61,8 @@ namespace NetUpdater.Core
             await versionDataResult.Match(
                 async versionData => await Execute(localManifest, new Uri(updateUri, versionData.ManifestPath)),
                 error => throw new Exception("Version data was not set.", error));
+
+            return remoteManifestResult.ToOption();
         }
 
         private async Task Execute(Option<Manifest> localManifestOption, Uri manifestUri)

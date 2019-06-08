@@ -38,7 +38,11 @@ namespace NetUpdater.Cli
 
             Console.WriteLine($"Running update in \"{options.ApplicationPath}\"...");
             var updater = new Updater(WebLocator.Instance, options.ApplicationPath.LocalPath, options.ManifestName, OptionNone.Default);
-            await updater.Update(options.UpdateUrl);
+            var newManifest = await updater.Update(options.UpdateUrl);
+
+            Console.WriteLine(newManifest.Match(
+                manifest => $"Updated to {manifest.Channel}-{manifest.Version}.",
+                () => "No update found."));
         }
 
         #endregion Private Methods

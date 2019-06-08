@@ -42,6 +42,11 @@ namespace NetUpdater.Core
 
         public static string ToHex(this byte[] buffer) => string.Join(string.Empty, buffer.Select(o => o.ToString("X2", CultureInfo.InvariantCulture)));
 
+        public static Option<A> ToOption<A, Error>(this Result<A, Error> result)
+        {
+            return result.Match<Option<A>>(o => new Some<A>(o), _ => OptionNone.Default);
+        }
+
         public static Result<T, Exception> Try<T>(Func<T> func)
         {
             try
