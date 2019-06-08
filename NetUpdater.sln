@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetUpdater.Core", "NetUpdater.Core\NetUpdater.Core.csproj", "{1A663242-19F5-4DF7-AF50-F2B545724F66}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetUpdater.Pack", "NetUpdater.Pack\NetUpdater.Pack.csproj", "{4E527C8C-B962-41CF-97C6-180CC1EB31DE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetUpdater.Cli", "NetUpdater.Cli\NetUpdater.Cli.csproj", "{E1139981-DC76-4B26-885F-7AFD978550BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetUpdater.Test", "NetUpdater.Test\NetUpdater.Test.csproj", "{0D3B4422-9020-4B62-9460-3FFD8DE536C6}"
@@ -21,10 +19,6 @@ Global
 		{1A663242-19F5-4DF7-AF50-F2B545724F66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A663242-19F5-4DF7-AF50-F2B545724F66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A663242-19F5-4DF7-AF50-F2B545724F66}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E527C8C-B962-41CF-97C6-180CC1EB31DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E527C8C-B962-41CF-97C6-180CC1EB31DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E527C8C-B962-41CF-97C6-180CC1EB31DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E527C8C-B962-41CF-97C6-180CC1EB31DE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E1139981-DC76-4B26-885F-7AFD978550BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E1139981-DC76-4B26-885F-7AFD978550BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1139981-DC76-4B26-885F-7AFD978550BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
