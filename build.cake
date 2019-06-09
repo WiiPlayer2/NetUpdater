@@ -5,7 +5,7 @@ using IOPath = System.IO.Path;
 var appVersion = new Version(0, 1);
 var runtimes = new []
 {
-    null,
+    string.Empty,
     "win-x64",
     "win-x86",
     "win-arm",
@@ -84,11 +84,11 @@ Task("Pack-Core")
 // Cli
 Task("Clean-Cli")
 .Does(() => {
-    var directories = GetDirectories($"./_build/{configuration}/cli-*");
-    DeleteDirectories(directories, new DeleteDirectorySettings
-    {
-        Recursive = true,
-    });
+    if(DirectoryExists($"./_build/{configuration}/cli"))
+        DeleteDirectory($"./_build/{configuration}/cli", new DeleteDirectorySettings
+        {
+            Recursive = true,
+        });
     
     var files = GetFiles($"./_build/{configuration}/cli-*.zip");
     DeleteFiles(files);
@@ -101,7 +101,7 @@ Task("Publish-Cli")
     if(string.IsNullOrEmpty(runtime))
         runtimeName = "any";
     
-    var outputPath = System.IO.Path.Combine(buildFolder, $"cli-{runtimeName}");
+    var outputPath = System.IO.Path.Combine(buildFolder, "cli", runtimeName);
     DotNetCorePublish("./NetUpdater.Cli/NetUpdater.Cli.csproj", new DotNetCorePublishSettings
     {
         Configuration = configuration,
@@ -113,8 +113,8 @@ Task("Publish-Cli")
 
 Task("Pack-Cli")
 .IsDependentOn("Publish-Cli")
-.DoesForEach(GetDirectories($"./_build/{configuration}/cli-*"), directoryPath => {
-    var zipFile = $"{directoryPath}-{appVersion}-{configuration}.zip";
+.DoesForEach(() => GetDirectories($"./_build/{configuration}/cli/*"), directoryPath => {
+    var zipFile = $"./_build/{configuration}/cli_{directoryPath.GetDirectoryName()}-{appVersion}-{configuration}.zip";
     Information($"Zipping {directoryPath}...");
     Zip(directoryPath, zipFile);
 });
