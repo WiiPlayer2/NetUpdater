@@ -19,8 +19,12 @@ var runtimes = new []
 // ARGUMENTS
 ///////////////////////////////////////////////////////////////////////////////
 
+var nugetApiKey = EnvironmentVariable("NUGET_API_KEY");
+var nugetSource = EnvironmentVariable("NUGET_SOURCE");
 var target = Argument("target", "Pack");
 var configuration = Argument("configuration", "Release");
+var skipClean = HasArgument("SkipClean");
+var skipPack = HasArgument("SkipPack");
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -63,6 +67,7 @@ Teardown(ctx =>
 
 // Core
 Task("Clean-Core")
+.WithCriteria(!skipClean)
 .Does(() => {
     if(!DirectoryExists(buildFolder))
         return;
@@ -72,6 +77,7 @@ Task("Clean-Core")
 });
 
 Task("Pack-Core")
+.WithCriteria(!skipPack)
 .IsDependentOn("Clean-Core")
 .Does(() => {
     DotNetCorePack("./NetUpdater.Core/NetUpdater.Core.csproj", new DotNetCorePackSettings
@@ -81,8 +87,21 @@ Task("Pack-Core")
     });
 });
 
+Task("Publish-Core")
+.IsDependentOn("Pack-Core")
+.Does(() => {
+    var nugetPackageFile = GetFiles($"./_build/{configuration}/*.nupkg").FirstOrDefault();
+    if(nugetPackageFile != null)
+        NuGetPush(nugetPackageFile, new NuGetPushSettings
+        {
+            ApiKey = nugetApiKey,
+            Source = nugetSource,
+        });
+});
+
 // Cli
 Task("Clean-Cli")
+.WithCriteria(!skipClean)
 .Does(() => {
     if(DirectoryExists($"./_build/{configuration}/cli"))
         DeleteDirectory($"./_build/{configuration}/cli", new DeleteDirectorySettings
@@ -94,7 +113,7 @@ Task("Clean-Cli")
     DeleteFiles(files);
 });
 
-Task("Publish-Cli")
+Task("Build-Cli")
 .IsDependentOn("Clean-Cli")
 .DoesForEach(runtimes, runtime => {
     var runtimeName = runtime;
@@ -112,7 +131,8 @@ Task("Publish-Cli")
 });
 
 Task("Pack-Cli")
-.IsDependentOn("Publish-Cli")
+.WithCriteria(!skipPack)
+.IsDependentOn("Build-Cli")
 .DoesForEach(() => GetDirectories($"./_build/{configuration}/cli/*"), directoryPath => {
     var zipFile = $"./_build/{configuration}/cli_{directoryPath.GetDirectoryName()}-{appVersion}-{configuration}.zip";
     Information($"Zipping {directoryPath}...");
@@ -121,6 +141,7 @@ Task("Pack-Cli")
 
 // Test
 Task("Clean-Test")
+.WithCriteria(!skipClean)
 .Does(() => {
     var files = GetFiles($"./_build/{configuration}/**/*TestResults.xml");
     DeleteFiles(files);
@@ -138,6 +159,7 @@ Task("Test")
 
 // Clean
 Task("Clean")
+.WithCriteria(!skipClean)
 .Does(() => {
     if(DirectoryExists(buildFolder))
         CleanDirectory(buildFolder);
@@ -145,7 +167,12 @@ Task("Clean")
 
 // Pack
 Task("Pack")
+.WithCriteria(!skipPack)
 .IsDependentOn("Pack-Core")
 .IsDependentOn("Pack-Cli");
+
+//Publish
+Task("Publish")
+.IsDependentOn("Publish-Core");
 
 RunTarget(target);

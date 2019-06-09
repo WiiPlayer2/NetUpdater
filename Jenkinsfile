@@ -18,8 +18,8 @@ pipeline {
 
         stage ('Build') {
             steps {
-                powershell './build.ps1 -Target Pack -Configuration Release'
-                powershell './build.ps1 -Target Pack -Configuration Debug'
+                powershell './build.ps1 -Target Pack -Configuration Release -SkipClean'
+                powershell './build.ps1 -Target Pack -Configuration Debug -SkipClean'
             }
         }
 
@@ -33,6 +33,17 @@ pipeline {
             steps {
                 archiveArtifacts '/_build/**/*.nupkg'
                 archiveArtifacts '/_build/**/*.zip'
+            }
+        }
+
+        stage ('Publish') {
+            environment {
+                NUGET_API_KEY = credentials('nuget-feed-api-key')
+                NUGET_SOURCE = "http://dark-link:5555"
+            }
+
+            steps {
+                powershell './build.ps1 -Target Publish -Configuration Release -SkipClean -SkipPack'
             }
         }
     }

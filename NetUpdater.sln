@@ -7,12 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetUpdater.Core", "NetUpdat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetUpdater.Cli", "NetUpdater.Cli\NetUpdater.Cli.csproj", "{E1139981-DC76-4B26-885F-7AFD978550BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetUpdater.Test", "NetUpdater.Test\NetUpdater.Test.csproj", "{0D3B4422-9020-4B62-9460-3FFD8DE536C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetUpdater.Test", "NetUpdater.Test\NetUpdater.Test.csproj", "{0D3B4422-9020-4B62-9460-3FFD8DE536C6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{68F2F943-3F32-481F-9E4E-2AE34D0A1DEC}"
 	ProjectSection(SolutionItems) = preProject
 		build.cake = build.cake
 		build.ps1 = build.ps1
+		Jenkinsfile = Jenkinsfile
 	EndProjectSection
 EndProject
 Global
