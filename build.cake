@@ -7,12 +7,12 @@ var runtimes = new []
 {
     null,
     "win-x64",
-    // "win-x86",
-    // "win-arm",
-    // "win-arm64",
-    // "linux-x64",
-    // "linux-arm",
-    // "osx-x64",
+    "win-x86",
+    "win-arm",
+    "win-arm64",
+    "linux-x64",
+    "linux-arm",
+    "osx-x64",
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,6 +34,11 @@ Setup(ctx =>
 {
     // Executed BEFORE the first task.
     Information("Running tasks...");
+
+    if(Jenkins.IsRunningOnJenkins)
+    {
+        branch = Jenkins.Environment.Repository.BranchName;
+    }
 
     var now = DateTimeOffset.UtcNow;
     var epochStart = new DateTimeOffset(2019, 1, 1, 0, 0, 0, TimeSpan.Zero);
