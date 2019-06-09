@@ -39,7 +39,7 @@ pipeline {
         stage ('Publish') {
             environment {
                 NUGET_API_KEY = credentials('nuget-feed-api-key')
-                NUGET_SOURCE = "http://dark-link:5555"
+                NUGET_SOURCE = "http://dark-link.info:5555"
             }
 
             steps {
