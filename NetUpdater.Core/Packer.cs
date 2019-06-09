@@ -81,12 +81,12 @@ namespace NetUpdater.Core
             foreach (var fileUri in manifest.HashMap.Keys)
             {
                 var pathUri = new Uri(baseFileUri, fileUri);
-                var entryUri = new Uri($"{baseEntryUri}{fileUri}", UriKind.Relative);
+                var entryUri = new Uri($"{baseEntryUri}/{fileUri}", UriKind.Relative);
 
                 zip.Add(pathUri.LocalPath, entryUri.ToString());
             }
 
-            var manifestUri = new Uri($"{baseEntryUri}{manifestName}", UriKind.Relative);
+            var manifestUri = new Uri($"{baseEntryUri}/{manifestName}", UriKind.Relative);
             zip.Add(manifestPath, manifestUri.ToString());
 
             var versionDataPath = await GenerateVersionData(manifest, manifestUri);
