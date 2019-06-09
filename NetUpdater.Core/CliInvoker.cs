@@ -48,7 +48,7 @@ namespace NetUpdater.Core
         private async Task Invoke(bool waitForExit, params string[] args)
         {
             var tmpCliFile = await Prepare();
-            var totalArgs = new[] { "run", tmpCliFile.FullName }.Concat(args);
+            var totalArgs = new[] { tmpCliFile.FullName }.Concat(args);
             var arguments = string.Join(" ", totalArgs.Select(o => $"\"{o.Replace("\"", "\"\"")}\""));
             var process = Process.Start("dotnet", arguments);
 

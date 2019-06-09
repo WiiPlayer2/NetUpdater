@@ -12,7 +12,7 @@ namespace NetUpdater.Cli
         #region Public Properties
 
         [Option('a', "applicationPath", Required = true, HelpText = "Sets the application path.")]
-        public Uri ApplicationPath { get; set; }
+        public string ApplicationPath { get; set; }
 
         [Option('c', "channel", Required = true, HelpText = "Sets the pack channel.")]
         public string Channel { get; set; }

@@ -11,7 +11,7 @@ namespace NetUpdater.Cli
         #region Public Properties
 
         [Option('a', "applicationPath", Required = true, HelpText = "Sets the application path.")]
-        public Uri ApplicationPath { get; set; }
+        public string ApplicationPath { get; set; }
 
         [Option('m', "manifestName", Required = true, HelpText = "Sets the manifest name of the application.")]
         public string ManifestName { get; set; }

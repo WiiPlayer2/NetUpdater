@@ -23,7 +23,7 @@ namespace NetUpdater.Cli
         private static async Task RunPack(PackOptions options)
         {
             Console.WriteLine($"Packing \"{options.ApplicationPath}\"...");
-            var packer = new Packer(options.ApplicationPath.LocalPath, options.ManifestName, options.Channel);
+            var packer = new Packer(options.ApplicationPath, options.ManifestName, options.Channel);
             await packer.Pack(options.Version, options.OutputPath);
             Console.WriteLine($"Packed to \"{options.OutputPath}\".");
         }
@@ -37,7 +37,7 @@ namespace NetUpdater.Cli
             }
 
             Console.WriteLine($"Running update in \"{options.ApplicationPath}\"...");
-            var updater = new Updater(WebLocator.Instance, options.ApplicationPath.LocalPath, options.ManifestName, OptionNone.Default);
+            var updater = new Updater(WebLocator.Instance, options.ApplicationPath, options.ManifestName, OptionNone.Default);
             var newManifest = await updater.Update(options.UpdateUrl);
 
             Console.WriteLine(newManifest.Match(
