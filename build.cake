@@ -162,8 +162,8 @@ Task("Test")
 Task("Clean")
 .WithCriteria(!skipClean)
 .Does(() => {
-    if(DirectoryExists(buildFolder))
-        CleanDirectory(buildFolder);
+    if(DirectoryExists("./_build"))
+        CleanDirectory("./_build");
 });
 
 // Pack
