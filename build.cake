@@ -127,7 +127,7 @@ Task("Build-Cli")
         VersionSuffix = branch,
         OutputDirectory = outputPath,
         Runtime = runtime,
-        Verbosity = DotNetCoreVerbosity.Minimal,
+        Verbosity = DotNetCoreVerbosity.Quiet,
     });
 });
 
