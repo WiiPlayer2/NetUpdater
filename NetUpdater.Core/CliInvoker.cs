@@ -62,6 +62,7 @@ namespace NetUpdater.Core
 
             var tmpDirectoryPath = Path.GetTempFileName();
             File.Delete(tmpDirectoryPath);
+            Directory.CreateDirectory(tmpDirectoryPath);
 
             var copyTasks = netUpdaterFiles.Select(file => Task.Run(() => File.Copy(file.FullName, Path.Combine(tmpDirectoryPath, file.Name))));
             await Task.WhenAll(copyTasks);
