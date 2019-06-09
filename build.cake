@@ -84,14 +84,14 @@ Task("Pack-Core")
 // Cli
 Task("Clean-Cli")
 .Does(() => {
-    if(!DirectoryExists(buildFolder))
-        return;
-
     var directories = GetDirectories($"./_build/{configuration}/cli-*");
     DeleteDirectories(directories, new DeleteDirectorySettings
     {
         Recursive = true,
     });
+    
+    var files = GetFiles($"./_build/{configuration}/cli-*.zip");
+    DeleteFiles(files);
 });
 
 Task("Publish-Cli")
@@ -114,9 +114,9 @@ Task("Publish-Cli")
 Task("Pack-Cli")
 .IsDependentOn("Publish-Cli")
 .DoesForEach(GetDirectories($"./_build/{configuration}/cli-*"), directoryPath => {
-    var zipFile = $"{directoryPath}.zip";
+    var zipFile = $"{directoryPath}-{appVersion}-{configuration}.zip";
     Information($"Zipping {directoryPath}...");
-    Zip(directoryPath, $"{directoryPath}.zip");
+    Zip(directoryPath, zipFile);
 });
 
 // Test

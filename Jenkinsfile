@@ -31,6 +31,7 @@ pipeline {
         
         stage ('Archive') {
             steps {
+                archiveArtifacts '/_build/**/*.nupkg'
                 archiveArtifacts '/_build/**/*.zip'
             }
         }
@@ -38,7 +39,7 @@ pipeline {
 
     post {
         always {
-            mstest testResultsFile: '_build/Release/*.trx'
+            mstest testResultsFile: '_build/Release/**/*TestResults.xml'
         }
     }
 }
