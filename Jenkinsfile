@@ -22,11 +22,23 @@ pipeline {
                 powershell './build.ps1 -Target Pack -Configuration Debug'
             }
         }
+
+        stage ('Test') {
+            steps {
+                powershell './build.ps1 -Target Test -Configuration Release'
+            }
+        }
         
         stage ('Archive') {
             steps {
                 archiveArtifacts '/_build/**/*.zip'
             }
+        }
+    }
+
+    post {
+        always {
+            mstest testResultsFile: '_build/Release/*.trx'
         }
     }
 }
