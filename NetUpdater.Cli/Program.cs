@@ -4,6 +4,7 @@ using NetUpdater.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace NetUpdater.Cli
@@ -37,7 +38,11 @@ namespace NetUpdater.Cli
             }
 
             Console.WriteLine($"Running update in \"{options.ApplicationPath}\"...");
-            var updater = new Updater(WebLocator.Instance, options.ApplicationPath, options.ManifestName, OptionNone.Default);
+            var localManifestFile = Path.Combine(options.ApplicationPath, options.ManifestName);
+            var manifestNameOption = File.Exists(localManifestFile) ? (Option<string>)new Some<string>(options.ManifestName) : OptionNone.Default;
+            var channelOption = manifestNameOption.Match(_ => OptionNone.Default, () => (Option<string>)new Some<string>(options.Channel));
+
+            var updater = new Updater(WebLocator.Instance, options.ApplicationPath, manifestNameOption, channelOption);
             var newManifest = await updater.Update(options.UpdateUrl);
 
             Console.WriteLine(newManifest.Match(

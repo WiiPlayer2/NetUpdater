@@ -32,13 +32,13 @@ namespace NetUpdater.Core
 
         #region Public Methods
 
-        public Task Update(Uri updateUri)
+        public Task Update(Uri updateUri, string channel)
         {
             var applicationAssemblyPath = Assembly.GetEntryAssembly().Location;
             var applicationPath = Path.GetDirectoryName(applicationAssemblyPath);
             var currentProcess = Process.GetCurrentProcess();
 
-            return Invoke(false, "update", "-a", applicationPath, "-m", manifestName, "-u", updateUri.ToString(), "-p", currentProcess.Id.ToString());
+            return Invoke(false, "update", "-a", applicationPath, "-m", manifestName, "-u", updateUri.ToString(), "-p", currentProcess.Id.ToString(), "-c", channel);
         }
 
         #endregion Public Methods

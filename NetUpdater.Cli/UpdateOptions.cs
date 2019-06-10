@@ -13,6 +13,9 @@ namespace NetUpdater.Cli
         [Option('a', "applicationPath", Required = true, HelpText = "Sets the application path.")]
         public string ApplicationPath { get; set; }
 
+        [Option('c', "channel", HelpText = "Sets the channel if the manifest is not available.")]
+        public string Channel { get; set; }
+
         [Option('m', "manifestName", Required = true, HelpText = "Sets the manifest name of the application.")]
         public string ManifestName { get; set; }
 
