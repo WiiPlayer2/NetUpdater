@@ -15,8 +15,16 @@ namespace NetUpdater.Cli
 
         private static async Task Main(string[] args)
         {
-            await Parser.Default.ParseArguments<PackOptions, UpdateOptions>(args)
-                .MapResult<PackOptions, UpdateOptions, Task>(RunPack, RunUpdate, RunError);
+            try
+            {
+                await Parser.Default.ParseArguments<PackOptions, UpdateOptions>(args)
+                    .MapResult<PackOptions, UpdateOptions, Task>(RunPack, RunUpdate, RunError);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                await Task.Delay(-1);
+            }
         }
 
         private static Task RunError(IEnumerable<Error> arg) => Task.CompletedTask;
