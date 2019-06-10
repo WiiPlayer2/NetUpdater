@@ -58,7 +58,7 @@ namespace NetUpdater.Core
 
         private async Task<FileInfo> Prepare()
         {
-            var netUpdaterFiles = cliFile.Directory.EnumerateFiles("NetUpdater.*");
+            var netUpdaterFiles = cliFile.Directory.EnumerateFiles();
 
             var tmpDirectoryPath = Path.GetTempFileName();
             File.Delete(tmpDirectoryPath);
